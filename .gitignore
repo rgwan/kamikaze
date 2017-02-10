@@ -1,0 +1,7 @@
+*~
+*.hex
+*.elf
+*.bin
+*.vvp
+*.vcd
+disasm.S

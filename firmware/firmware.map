@@ -1,0 +1,39 @@
+
+内存配置
+
+名称           来源             长度             属性
+*default*        0x0000000000000000 0xffffffffffffffff
+
+链结器命令稿和内存映射
+
+LOAD /tmp/ccljpktb.o
+LOAD /tmp/ccyHRNCG.o
+
+.memory         0x0000000000000000      0x1b0
+                0x0000000000000000                . = 0x0
+ *(.init)
+ .init          0x0000000000000000       0x10 /tmp/ccljpktb.o
+ *(.text)
+ .text          0x0000000000000010        0x0 /tmp/ccljpktb.o
+ .text          0x0000000000000010       0x82 /tmp/ccyHRNCG.o
+                0x0000000000000010                putc
+                0x0000000000000052                puts
+                0x0000000000000078                memcpy
+ *(*)
+ .data          0x0000000000000092        0x0 /tmp/ccljpktb.o
+ .bss           0x0000000000000092        0x0 /tmp/ccljpktb.o
+ .rela.init     0x0000000000000092        0x0 /tmp/ccljpktb.o
+ .data          0x0000000000000092        0x0 /tmp/ccyHRNCG.o
+ .bss           0x0000000000000092        0x0 /tmp/ccyHRNCG.o
+ .text.startup  0x0000000000000092       0x88 /tmp/ccyHRNCG.o
+                0x0000000000000092                main
+ *fill*         0x000000000000011a        0x2 
+ .rodata.str1.4
+                0x000000000000011c       0x80 /tmp/ccyHRNCG.o
+ .comment       0x000000000000019c       0x11 /tmp/ccyHRNCG.o
+                                         0x12 (松开之前的大小)
+                0x00000000000001b0                . = ALIGN (0x4)
+ *fill*         0x00000000000001ad        0x3 
+                0x00000000000001b0                end = .
+LOAD /opt/riscv32i/lib/gcc/riscv32-unknown-elf/6.1.0/libgcc.a
+OUTPUT(firmware.elf elf32-littleriscv)
