@@ -15,9 +15,9 @@ Goals:
 
 	RISC-V RV32IMC instruction set compatible.
 
-	Maybe add some instruction to enhance it's performance.
+	I will add some instruction to enhance it's performance, if I have enough time working onm it.
 
-	Harvard architecture.
+	Harvard architecture which features I-bus and D-bus.
 
 	Small footprint for small FPGA or ASIC.
 
@@ -25,7 +25,13 @@ Goals:
 
 	Debug supported. The debug register will mapped on MMIO(APB interface), and support debug externally from special UART.
 
+Authors:
+----------
+
+Zhiyuan Wan
+
 License:  
 ----------
 
 MIT
+
