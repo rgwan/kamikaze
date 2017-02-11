@@ -15,7 +15,7 @@ Goals:
 
 	RISC-V RV32IMC instruction set compatible.
 
-	I will add some instruction to enhance it's performance, if I have enough time working onm it.
+	I will add some instruction to enhance it's performance, if I have enough time working on it.
 
 	Harvard architecture which features I-bus and D-bus.
 
