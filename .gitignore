@@ -5,3 +5,7 @@
 *.vvp
 *.vcd
 disasm.S
+*.vec
+*.log
+*.bit
+

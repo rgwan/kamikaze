@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project>
+    <Project_Created_Time>2017-02-11 13:20:21</Project_Created_Time>
+    <Name>kamikaze_test</Name>
+    <HardWare>
+        <Family>AL3</Family>
+        <Device>AL3A10BG256C7</Device>
+    </HardWare>
+    <Source_Files>
+        <Verilog>
+            <File>../../src/top.v</File>
+            <File>../../src/kamikaze.v</File>
+            <File>../../src/fetch.v</File>
+            <File>config.v</File>
+        </Verilog>
+        <ADC_FILE/>
+        <SDC_FILE/>
+        <CWC_FILE/>
+    </Source_Files>
+    <TOP_MODULE>
+        <LABEL/>
+        <MODULE>top</MODULE>
+        <CREATEINDEX>auto</CREATEINDEX>
+    </TOP_MODULE>
+    <Project_Settings>
+        <Current_Step>0</Current_Step>
+        <SRC-Last-Read/>
+        <SLC-Last-Read/>
+        <SDC-Last-Read></SDC-Last-Read>
+    </Project_Settings>
+</Project>
