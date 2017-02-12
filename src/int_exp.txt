@@ -1,0 +1,11 @@
+interrupt & exception table:
+base_address: IVT_BASE, must be aligned to 4
+
+initial_sp
+reset_address
+bus_error(misaligned/invalid memory access)
+execute_error(divided by zero or illegal instruction)
+sys_call(ecall instruction, ebreak will triggers the debugger if it is online)
+nmi(not maskable interrupt, it is interrupt 0)
+interrupts 1-31
+

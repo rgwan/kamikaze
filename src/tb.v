@@ -6,7 +6,6 @@ module system_tb;
 	initial begin
 		$dumpfile("kamikaze.vcd");
 		$dumpvars(0, system_tb);
-		#10 rst = 0;
 		#15 rst = 1;
 		#1000 $finish;
 

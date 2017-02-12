@@ -14,7 +14,7 @@ module kamikaze_fetch(clk_i,
 	input [31:0] im_data_i; 
 	output reg [31:0] instr_o;
 	output [31:0] im_addr_o;
-	output reg instr_valid_o;
+	output instr_valid_o;
 	output is_compressed_instr_o;
 	output [31:0] pc_o;
 	//input stall_i; /* IF 停止信号 */
@@ -34,7 +34,10 @@ module kamikaze_fetch(clk_i,
 	
 	assign is_compressed_instr_o = is_compressed_instr;
 	
-	localparam CPU_START = 32'h0; /* 启动地址 */
+	reg align_wait;	/* 对齐等待 */
+	
+	assign instr_valid_o = !align_wait;
+	localparam CPU_START = 32'h2; /* 启动地址 */
 	
 	assign im_addr_o = pc_4[1]? (pc_4 + 2'b10): pc_4; /* 舍入 */
 	assign stall_requiring = (pc_add_prev == 2) && (pc[1:0] == 2'b00); /* 16位对齐等待，防止冲数据 */
@@ -42,29 +45,33 @@ module kamikaze_fetch(clk_i,
 	assign pc_o = pc;
 	
 	
+	
+	
 	always @(posedge clk_i or negedge rst_i)
 	begin
 		if(!rst_i)
 		begin
-			pc_4 <= CPU_START;
-			pc <= CPU_START;/* PC 比 pc_4 滞后1 CLK */
+			pc_4 <= {CPU_START[31:2], 2'b00};
+			pc <= {CPU_START[31:2], 2'b00};/* PC 比 pc_4 滞后1 CLK */
 			fetch_start <= 0;
 			pc_add_prev <= 4;
 			last_instr <= 32'h0;
-			instr_valid_o <= 0;
+			align_wait = CPU_START[1];
 		end
 		else
 		begin
 			if(!stall_i)
-			begin
+			begin	
 				if(fetch_start == 1'b0)
 				begin
 					fetch_start <= 1'b1; /* 取 0 指令 */
 					pc_4 <= pc_4 + 16'h4;
-					instr_valid_o <= 1;
 				end
 				else
 				begin
+					if(align_wait)
+						align_wait <= 0;
+						
 					pc_4 <= pc_4 + pc_add;
 					pc <= pc + pc_add;
 				

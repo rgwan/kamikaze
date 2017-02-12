@@ -1,0 +1,10 @@
+0x300	MSTATUS:	IE[0], PRIV[2:1], CY[3]
+0x341	MEPC		Storage last pc and jump to interrupt or exception address
+0x342	MCAUSE		INT[31](it is trigged by an interrupt), Exception op-code[4:0]
+0x301	MISA		ISA support RV32IMC
+
+0xF11	MVID		"ANLG"	(Anlogic)
+0xF12	MARCHID		"ZYKZ"	(Zhiyuan Kamikaze)
+0xF13	MIMPID		"0000"	(r0p0)
+
+/* performance counter will not be implemented in this CPU */

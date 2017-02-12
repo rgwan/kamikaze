@@ -18,7 +18,7 @@
         <CWC_FILE/>
     </Source_Files>
     <TOP_MODULE>
-        <LABEL/>
+        <LABEL></LABEL>
         <MODULE>top</MODULE>
         <CREATEINDEX>auto</CREATEINDEX>
     </TOP_MODULE>
@@ -26,6 +26,6 @@
         <Current_Step>0</Current_Step>
         <SRC-Last-Read/>
         <SLC-Last-Read/>
-        <SDC-Last-Read></SDC-Last-Read>
+        <SDC-Last-Read/>
     </Project_Settings>
 </Project>
