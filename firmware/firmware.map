@@ -6,31 +6,31 @@
 
 链结器命令稿和内存映射
 
-LOAD /tmp/cc2aSE7v.o
-LOAD /tmp/cct2qRib.o
+LOAD /tmp/ccSM515K.o
+LOAD /tmp/cc3MzYXu.o
 
 .memory         0x0000000000000000      0x1b0
                 0x0000000000000000                . = 0x0
  *(.init)
- .init          0x0000000000000000       0x12 /tmp/cc2aSE7v.o
+ .init          0x0000000000000000       0x12 /tmp/ccSM515K.o
  *(.text)
- .text          0x0000000000000012        0x0 /tmp/cc2aSE7v.o
- .text          0x0000000000000012       0x82 /tmp/cct2qRib.o
+ .text          0x0000000000000012        0x0 /tmp/ccSM515K.o
+ .text          0x0000000000000012       0x82 /tmp/cc3MzYXu.o
                 0x0000000000000012                putc
                 0x0000000000000054                puts
                 0x000000000000007a                memcpy
  *(*)
- .data          0x0000000000000094        0x0 /tmp/cc2aSE7v.o
- .bss           0x0000000000000094        0x0 /tmp/cc2aSE7v.o
- .rela.init     0x0000000000000094        0x0 /tmp/cc2aSE7v.o
- .data          0x0000000000000094        0x0 /tmp/cct2qRib.o
- .bss           0x0000000000000094        0x0 /tmp/cct2qRib.o
- .text.startup  0x0000000000000094       0x88 /tmp/cct2qRib.o
+ .data          0x0000000000000094        0x0 /tmp/ccSM515K.o
+ .bss           0x0000000000000094        0x0 /tmp/ccSM515K.o
+ .rela.init     0x0000000000000094        0x0 /tmp/ccSM515K.o
+ .data          0x0000000000000094        0x0 /tmp/cc3MzYXu.o
+ .bss           0x0000000000000094        0x0 /tmp/cc3MzYXu.o
+ .text.startup  0x0000000000000094       0x88 /tmp/cc3MzYXu.o
                 0x0000000000000094                main
  *fill*         0x000000000000011c        0x0 
  .rodata.str1.4
-                0x000000000000011c       0x80 /tmp/cct2qRib.o
- .comment       0x000000000000019c       0x11 /tmp/cct2qRib.o
+                0x000000000000011c       0x80 /tmp/cc3MzYXu.o
+ .comment       0x000000000000019c       0x11 /tmp/cc3MzYXu.o
                                          0x12 (松开之前的大小)
                 0x00000000000001b0                . = ALIGN (0x4)
  *fill*         0x00000000000001ad        0x3 

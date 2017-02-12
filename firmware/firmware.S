@@ -2,7 +2,7 @@
 .global main
 
 /* set stack pointer */
-nop
+ret
 nop
 lui sp, %hi(1*1024)
 addi sp, sp, %lo(1*1024)
