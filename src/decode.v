@@ -11,6 +11,7 @@ module kamikaze_decode( clk_i,
 			rf_rs1_o,
 			rf_rs2_o,
 			rf_rd_o,
+			rf_rd_we_o,
 			
 			imm_o,
 			decode_valid_o,
@@ -18,6 +19,7 @@ module kamikaze_decode( clk_i,
 			
 			alu_func_o,
 			pc_o
+		
 			);
 	
 	input clk_i;
@@ -29,9 +31,11 @@ module kamikaze_decode( clk_i,
 	
 	input [31:0] pc_i; /*虽然没什么卵用*/
 	
+	/* 到执行阶段-回写阶段 */
 	output [4:0] rf_rs1_o;
 	output [4:0] rf_rs2_o;
 	output reg [4:0] rf_rd_o  = 0; /* 寄存器 2R 1W地址口, 同步RAM?分布RAM? */
+	output reg rf_rd_we_o;
 	
 	output reg [2:0] alu_func_o = 0;
 	
@@ -40,7 +44,6 @@ module kamikaze_decode( clk_i,
 	output reg decode_valid_o; /* 指令是否有效 */
 	output reg alu_op2_sel_o;
 	
-	reg [31:0]pc = 0;
 	
 	reg is_compressed_instr = 0;
 	
@@ -74,6 +77,8 @@ module kamikaze_decode( clk_i,
 		if(!rst_i)
 		begin
 			decode_valid_o <= 0;
+			rf_rd_we_o <= 0;
+			pc_o <= 0;
 		end
 		else
 		begin			
@@ -85,13 +90,14 @@ module kamikaze_decode( clk_i,
 			
 			alu_func_o <= 0;
 			imm_o <= 0;
-			pc_o <= pc;
+			rf_rd_we_o <= 0;
 			case (opcode)
 				`OPC_OP_IMM:
 				begin
 					alu_func_o <= alu_func;
 					imm_o <= d_imm_i;
-					alu_op2_sel_o <= 0;
+					alu_op2_sel_o <= 0; //选择立即数
+					rf_rd_we_o <= instr_valid_i;
 				end
 				/*OPC_LUI:
 				OPC_AUIPC:
@@ -108,7 +114,7 @@ module kamikaze_decode( clk_i,
 				end
 			endcase
 			
-			pc <= pc_i;
+			pc_o <= pc_i;
 			is_compressed_instr <= is_compressed_instr_i;
 		end
 	end
