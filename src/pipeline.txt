@@ -1,0 +1,21 @@
+IF- Fetch and pre-decode compressed instruction to plain instruction. It is possible to add a 32bit-wide prefetcher to realize branch prediction, or we can simply don't use BP.
+
+ID- Decode plain instruction to ALU function, memory access....control signal
+
+EX1/MEM- Calculating address, and/or/xor/add stage. Expanding sign. Half multiply stage. Access the memory.
+	Align process will provided by memory controller, which is not inside the core.(? Maybe I will work around)
+
+EX2/WB - Expanding sign from memory read, write result back to register file.
+
+simple memory interface:
+
+IM:
+
+im_addr_o => instruction memory address, aligned by 4
+im_data_i => instruction memory data
+im_data_ready_i => wait state for instruction memory
+im_data_req_o => instruction memory access signal, low means inactive.
+
+
+
+
