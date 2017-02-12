@@ -1,3 +1,5 @@
+/* 神疯RISC-V RV32IMC CPU 顶层文件 */
+/* Zhiyuan Wan，Jan. 2017 */
 module kamikaze(clk_i,
 		rst_i,
 		im_addr_o,
