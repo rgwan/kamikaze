@@ -37,7 +37,7 @@ module kamikaze_fetch(clk_i,
 	reg align_wait;	/* 对齐等待 */
 	
 	assign instr_valid_o = !align_wait && !illegal_instr_c && fetch_start;
-	localparam CPU_START = 32'h2; /* 启动地址 */
+	localparam CPU_START = 32'h0; /* 启动地址 */
 	
 	assign im_addr_o = pc_4[1]? (pc_4 + 2'b10): pc_4; /* 舍入 */
 	assign stall_requiring = (pc_add_prev == 2) && (pc[1:0] == 2'b00); /* 16位对齐等待，防止冲数据 */
