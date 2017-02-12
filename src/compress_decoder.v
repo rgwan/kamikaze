@@ -27,7 +27,6 @@ module kamikaze_compress_decoder
 (
   input   	[31:0] instr_i,
   output  reg	[31:0] instr_o,
-  output	is_compressed_o,
   output  reg	illegal_instr_o
 );
 
@@ -227,7 +226,5 @@ module kamikaze_compress_decoder
       end
     endcase
   end
-
-  assign is_compressed_o = (instr_i[1:0] != 2'b11);
 
 endmodule
