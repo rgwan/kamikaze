@@ -31,9 +31,10 @@ module kamikaze_decode( clk_i,
 	
 	input [31:0] pc_i; /*虽然没什么卵用*/
 	
-	/* 到执行阶段-回写阶段 */
-	output [4:0] rf_rs1_o;
-	output [4:0] rf_rs2_o;
+	/* 到执行阶段 */
+	output reg [4:0] rf_rs1_o;
+	output reg [4:0] rf_rs2_o;
+	/* -回写阶段 */
 	output reg [4:0] rf_rd_o  = 0; /* 寄存器 2R 1W地址口, 同步RAM?分布RAM? */
 	output reg rf_rd_we_o;
 	
@@ -69,8 +70,8 @@ module kamikaze_decode( clk_i,
 	
 	wire [2:0] alu_func = instr_i[14:12];
 	
-	assign rf_rs1_o = rs1_i;
-	assign rf_rs2_o = rs2_i;
+	//assign rf_rs1_o = rs1_i;
+	//assign rf_rs2_o = rs2_i;
 	
 	always @(posedge clk_i or negedge rst_i)
 	begin
@@ -82,8 +83,8 @@ module kamikaze_decode( clk_i,
 		end
 		else
 		begin			
-			//rf_rs1_o <= rs1_i; /* 可能可以提前 */
-			//rf_rs2_o <= rs2_i;
+			rf_rs1_o <= rs1_i; /* 可能可以提前 */
+			rf_rs2_o <= rs2_i;
 			rf_rd_o  <= rd_i; /* 寄存器解码 */
 			
 			decode_valid_o <= instr_valid_i;
