@@ -12,7 +12,7 @@ module kamikaze_fetch(clk_i,
 	input clk_i;
 	input rst_i;
 	input [31:0] im_data_i; 
-	output reg [31:0] instr_o;
+	output [31:0] instr_o;
 	output [31:0] im_addr_o;
 	output instr_valid_o;
 	output is_compressed_instr_o;
@@ -44,8 +44,9 @@ module kamikaze_fetch(clk_i,
 	
 	assign pc_o = pc;
 	
+	reg [31:0]instr_t; /* 临时存放 */
 	
-	
+	wire illegal_instr_c;/* 错误的压缩指令 */
 	
 	always @(posedge clk_i or negedge rst_i)
 	begin
@@ -93,12 +94,12 @@ module kamikaze_fetch(clk_i,
 				if(last_instr[1:0] != 2'b11) /* 对齐的压缩指令 */
 				begin
 					is_compressed_instr <= 1;
-					instr_o = last_instr[15:0];
+					instr_t = last_instr[15:0];
 				end
 				else
 				begin
 					is_compressed_instr <= 0;
-					instr_o = last_instr[31:0];
+					instr_t = last_instr[31:0];
 				end
 			end
 			else
@@ -106,12 +107,12 @@ module kamikaze_fetch(clk_i,
 				if(im_data_i[1:0] != 2'b11) /* 对齐的压缩指令 */
 				begin
 					is_compressed_instr <= 1;
-					instr_o = im_data_i[15:0];
+					instr_t = im_data_i[15:0];
 				end
 				else
 				begin
 					is_compressed_instr <= 0;
-					instr_o = im_data_i[31:0];
+					instr_t = im_data_i[31:0];
 				end
 			end
 		end
@@ -120,17 +121,20 @@ module kamikaze_fetch(clk_i,
 			if(last_instr[17:16] != 2'b11) /* 不对齐的压缩指令 */
 			begin
 				is_compressed_instr <= 1;
-				instr_o = last_instr[31:16];
+				instr_t = last_instr[31:16];
 			end
 			else			/* 不对齐的非压缩指令 */
 			begin
 				is_compressed_instr <= 0;
-				instr_o = {im_data_i[15:0], last_instr[31:16]};
+				instr_t = {im_data_i[15:0], last_instr[31:16]};
 			end
 		end
 						
 		pc_add = is_compressed_instr? 2: 4;
 	end
+	
+	kamikaze_compress_decoder c_dec(.instr_i(instr_t), .instr_o(instr_o), .illegal_instr_o(illegal_instr_c));
+	/* 解码压缩指令 */
 	
 	/* 这地方得有个分支预测器，你说我是直接预测全部不跳好，还是预测全部跳好呢？ */
 	

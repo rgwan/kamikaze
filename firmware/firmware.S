@@ -3,6 +3,7 @@
 
 /* set stack pointer */
 nop
+nop
 lui sp, %hi(1*1024)
 addi sp, sp, %lo(1*1024)
 

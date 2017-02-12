@@ -1,3 +1,5 @@
+`include "riscv_defines.v"
+
 module kamikaze_decode( clk_i,
 			rst_i,
 			is_compressed_instr_i,
@@ -10,7 +12,7 @@ module kamikaze_decode( clk_i,
 			rf_rd_o,
 			
 			imm_o,
-			valid_o
+			decode_valid_o
 			);
 	
 	input clk_i;
@@ -27,34 +29,28 @@ module kamikaze_decode( clk_i,
 	output reg [4:0]rf_rd_o  = 0; /* 寄存器 2R 1W地址口, 同步RAM?分布RAM? */
 	
 	output reg imm_o;
-	output reg valid_o; /* 指令是否有效 */
+	output reg decode_valid_o; /* 指令是否有效 */
 	
 	reg [31:0]pc = 0;
 	
+	reg [31:0]expand_comp; /* 解码压缩指令 */
+	
+	reg illegal_instr_comp; /* 压缩指令错误 */
+	wire [31:0]instr; /* 真正的指令 */
+	
 	reg is_compressed_instr = 0;
 	
-	localparam OPC_OP_IMM	= 5'b00100;
-	localparam OPC_LUI 	= 5'b01101;
-	localparam OPC_AUIPC 	= 5'b00101;
-	localparam OPC_OP 	= 5'b01100;
-	localparam OPC_JAL 	= 5'b11011;
-	localparam OPC_JALR 	= 5'b11001;
-	localparam OPC_BRANCH 	= 5'b11000;
-	localparam OPC_LOAD 	= 5'b00000;
-	localparam OPC_STORE 	= 5'b01000;
-	localparam OPC_SYSTEM 	= 5'b11100; /* 非压缩指令最后两位是11 */
+	wire [6:0]opcode = instr[6:0];
 	
-	wire [6:0]opcode = instr_i[6:0];
-	
-	wire [4:0]rs1_i = instr_i[19:15];
-	wire [4:0]rs2_i = instr_i[24:20];
-	wire [4:0]rd_i  = instr_i[11:7];
+	wire [4:0]rs1_i = instr[19:15];
+	wire [4:0]rs2_i = instr[24:20];
+	wire [4:0]rd_i  = instr[11:7];
 	
 	always @(posedge clk_i or negedge rst_i)
 	begin
 		if(!rst_i)
 		begin
-
+			decode_valid_o <= 0;
 		end
 		else
 		begin
@@ -69,9 +65,9 @@ module kamikaze_decode( clk_i,
 				rf_rs2_o <= rs1_i;
 				rf_rd_o  <= rs1_i; /* 寄存器解码 */
 				
-				valid_o <= 1;
+				decode_valid_o <= 1;
 				case (opcode[6:2])
-					OPC_OP_IMM:
+					`OPC_OP_IMM:
 					begin
 						
 					end
@@ -86,7 +82,7 @@ module kamikaze_decode( clk_i,
 					OPC_SYSTEM:*/
 					default:
 					begin
-						valid_o <= 0;
+						decode_valid_o <= 0;
 					end
 				endcase
 				
@@ -97,10 +93,5 @@ module kamikaze_decode( clk_i,
 		end
 	end
 	
-	always @*
-	begin
-	
-	
-	end
 	
 endmodule
