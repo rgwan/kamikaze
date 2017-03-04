@@ -7,18 +7,31 @@ module kamikaze_decode( clk_i,
 			instr_i,
 			instr_valid_i,
 			pc_i,
+			pc_next_i,
 			
 			rf_rs1_o,
 			rf_rs2_o,
+			
+			rf_rs1_i,
+			rf_rs2_i,
+			
 			rf_rd_o,
 			rf_rd_we_o,
 			
-			imm_o,
 			decode_valid_o,
-			alu_op2_sel_o,
 			
 			alu_func_o,
-			pc_o
+			
+			alu_op1_o,
+			alu_op2_o,
+			
+			ex_we_i,
+			ex_wd_i,
+			ex_wdata_i,
+			
+			
+			pc_o,
+			pc_next_o
 		
 			);
 	
@@ -30,20 +43,34 @@ module kamikaze_decode( clk_i,
 	input instr_valid_i;
 	
 	input [31:0] pc_i; /*虽然没什么卵用*/
+	input [31:0] pc_next_i; /*下一个pc，分支预测是否正确*/
 	
-	/* 到执行阶段 */
+	/* 寄存器地址输出 */
 	output reg [4:0] rf_rs1_o;
 	output reg [4:0] rf_rs2_o;
-	/* -回写阶段 */
+	
+	/* 寄存器数据输入 */
+	input [31:0] rf_rs1_i;
+	input [31:0] rf_rs2_i;
+	
+	/* ALU 输出 */
+	output reg [31:0] alu_op1_o;
+	output reg [31:0] alu_op2_o;
+	
+	/* 到回写阶段的 */
 	output reg [4:0] rf_rd_o  = 0; /* 寄存器 2R 1W地址口, 同步RAM?分布RAM? */
 	output reg rf_rd_we_o;
 	
 	output reg [2:0] alu_func_o = 0;
 	
-	output reg [31:0] imm_o;
+	/* 从回写阶段判断是否有写的数据 */
+	input ex_we_i;
+	input [4:0]ex_wd_i;
+	input [31:0]ex_wdata_i;
+	
 	output reg [31:0] pc_o;
+	output reg [31:0] pc_next_o;
 	output reg decode_valid_o; /* 指令是否有效 */
-	output reg alu_op2_sel_o;
 	
 	
 	reg is_compressed_instr = 0;
@@ -70,8 +97,29 @@ module kamikaze_decode( clk_i,
 	
 	wire [2:0] alu_func = instr_i[14:12];
 	
-	//assign rf_rs1_o = rs1_i;
-	//assign rf_rs2_o = rs2_i;
+	reg [31:0]rf_rs1;
+	reg [31:0]rf_rs2;
+	
+	/* 流水线结果前递 */
+	always @*
+	begin
+		if(ex_we_i)
+		begin
+			if(ex_wd_i == rf_rs1_o)
+				rf_rs1 = ex_wdata_i;
+			else
+				rf_rs1 = rf_rs1_i;
+			if(ex_wd_i == rf_rs2_o)
+				rf_rs2 = ex_wdata_i;
+			else
+				rf_rs2 = rf_rs2_i;			
+		end
+		else
+		begin
+			rf_rs1 = rf_rs1_i;
+			rf_rs2 = rf_rs2_i;
+		end
+	end
 	
 	always @(posedge clk_i or negedge rst_i)
 	begin
@@ -90,14 +138,17 @@ module kamikaze_decode( clk_i,
 			decode_valid_o <= instr_valid_i;
 			
 			alu_func_o <= 0;
-			imm_o <= 0;
+			
 			rf_rd_we_o <= 0;
+			
 			case (opcode)
 				`OPC_OP_IMM:
 				begin
 					alu_func_o <= alu_func;
-					imm_o <= d_imm_i;
-					alu_op2_sel_o <= 0; //选择立即数
+					alu_op2_o <= d_imm_i;
+					
+					alu_op1_o <= rf_rs1;
+					
 					rf_rd_we_o <= instr_valid_i;
 				end
 				/*OPC_LUI:
@@ -116,6 +167,7 @@ module kamikaze_decode( clk_i,
 			endcase
 			
 			pc_o <= pc_i;
+			pc_next_o <= pc_next_i;
 			is_compressed_instr <= is_compressed_instr_i;
 		end
 	end

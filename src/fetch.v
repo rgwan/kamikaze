@@ -2,12 +2,16 @@
 
 module kamikaze_fetch(clk_i,
 		rst_i,
+		
 		im_addr_o,
 		im_data_i,
+		
 		instr_o,
 		instr_valid_o,
 		is_compressed_instr_o,
-		pc_o);
+		
+		pc_o,
+		pc_next_o);
 		
 	input clk_i;
 	input rst_i;
@@ -17,6 +21,7 @@ module kamikaze_fetch(clk_i,
 	output instr_valid_o;
 	output is_compressed_instr_o;
 	output [31:0] pc_o;
+	output [31:0] pc_next_o;
 	//input stall_i; /* IF 停止信号 */
 	
 	wire [30:0] word_address = im_addr_o[31:2];
@@ -43,6 +48,7 @@ module kamikaze_fetch(clk_i,
 	assign stall_requiring = (pc_add_prev == 2) && (pc[1:0] == 2'b00); /* 16位对齐等待，防止冲数据 */
 	
 	assign pc_o = pc;
+	assign pc_next_o = pc_4;
 	
 	reg [31:0]instr_t; /* 临时存放 */
 	
