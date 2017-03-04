@@ -10,8 +10,7 @@ module kamikaze_fetch(clk_i,
 		instr_valid_o,
 		is_compressed_instr_o,
 		
-		pc_o,
-		pc_next_o);
+		pc_o);
 		
 	input clk_i;
 	input rst_i;
@@ -48,7 +47,6 @@ module kamikaze_fetch(clk_i,
 	assign stall_requiring = (pc_add_prev == 2) && (pc[1:0] == 2'b00); /* 16位对齐等待，防止冲数据 */
 	
 	assign pc_o = pc;
-	assign pc_next_o = pc_4;
 	
 	reg [31:0]instr_t; /* 临时存放 */
 	

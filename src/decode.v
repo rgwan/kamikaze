@@ -7,7 +7,6 @@ module kamikaze_decode( clk_i,
 			instr_i,
 			instr_valid_i,
 			pc_i,
-			pc_next_i,
 			
 			rf_rs1_o,
 			rf_rs2_o,
@@ -69,7 +68,10 @@ module kamikaze_decode( clk_i,
 	input [31:0]ex_wdata_i;
 	
 	output reg [31:0] pc_o;
-	output reg [31:0] pc_next_o;
+	output wire [31:0] pc_next_o;
+	
+	assign pc_next_o = pc_i;
+	
 	output reg decode_valid_o; /* 指令是否有效 */
 	
 	
@@ -97,29 +99,13 @@ module kamikaze_decode( clk_i,
 	
 	wire [2:0] alu_func = instr_i[14:12];
 	
-	reg [31:0]rf_rs1;
-	reg [31:0]rf_rs2;
+	wire [31:0]rf_rs1;
+	wire [31:0]rf_rs2;
+	
 	
 	/* 流水线结果前递 */
-	always @*
-	begin
-		if(ex_we_i)
-		begin
-			if(ex_wd_i == rf_rs1_o)
-				rf_rs1 = ex_wdata_i;
-			else
-				rf_rs1 = rf_rs1_i;
-			if(ex_wd_i == rf_rs2_o)
-				rf_rs2 = ex_wdata_i;
-			else
-				rf_rs2 = rf_rs2_i;			
-		end
-		else
-		begin
-			rf_rs1 = rf_rs1_i;
-			rf_rs2 = rf_rs2_i;
-		end
-	end
+	assign rf_rs1 = ex_we_i? (ex_wd_i == rs1_i? ex_wdata_i: rf_rs1_i): rf_rs1_i;
+	assign rf_rs2 = ex_we_i? (ex_wd_i == rs2_i? ex_wdata_i: rf_rs2_i): rf_rs2_i;
 	
 	always @(posedge clk_i or negedge rst_i)
 	begin
@@ -167,7 +153,6 @@ module kamikaze_decode( clk_i,
 			endcase
 			
 			pc_o <= pc_i;
-			pc_next_o <= pc_next_i;
 			is_compressed_instr <= is_compressed_instr_i;
 		end
 	end

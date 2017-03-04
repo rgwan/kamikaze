@@ -49,6 +49,7 @@ module kamikaze_execute(clk_i,
 	
 	assign pc_o = pc;
 	
+		
 	always @(posedge clk_i or negedge rst_i)
 	begin
 		if(!rst_i)
@@ -57,15 +58,21 @@ module kamikaze_execute(clk_i,
 		end
 		else
 		begin
-			pc <= pc_i;
-			result_o <= alu_out;
+			//pc <= pc_i;
+			/*result_o <= alu_out;
 			
 			rf_rd_o <= rf_rd_i;
-			rf_rd_we_o <= rf_rd_we_i;
+			rf_rd_we_o <= rf_rd_we_i;*/
 		end
 	end
 	
-	
+	always @*
+	begin
+			result_o <= alu_out;
+			
+			rf_rd_o <= rf_rd_i;
+			rf_rd_we_o <= rf_rd_we_i;		
+	end
 
 	/* ALU */
 	

@@ -14,7 +14,6 @@ module kamikaze(clk_i,
 	wire instr_valid;
 	
 	wire [31:0] pc_fetch;
-	wire [31:0] pc_fetch_next;
 	
 	/* 寄存器 */
 	wire [4:0] reg_raddr_1;
@@ -52,13 +51,13 @@ module kamikaze(clk_i,
 	kamikaze_fetch fetch(	.clk_i(clk_i), .rst_i(rst_i), /* 取指，扩展 */
 				.im_addr_o(im_addr_o), .im_data_i(im_data_i),
 				.instr_o(instruction), .is_compressed_instr_o(is_compressed_instr),
-				.instr_valid_o(instr_valid), .pc_o(pc_fetch), .pc_next_o(pc_fetch_next)
+				.instr_valid_o(instr_valid), .pc_o(pc_fetch)
 				);
 				
 	kamikaze_decode decode( .clk_i(clk_i), .rst_i(rst_i), /* 解码，读寄存器 */
 				.instr_i(instruction), .is_compressed_instr_i(is_compressed_instr),
 				
-				.pc_i(pc_fetch), .instr_valid_i(instr_valid), .pc_next_i(pc_fetch_next),
+				.pc_i(pc_fetch), .instr_valid_i(instr_valid),
 				
 				.alu_func_o(alu_func),
 				
